@@ -570,7 +570,7 @@ Yeti::drop_stalactite()
 
   // Make a stalactite fall down and shake the camera a bit.
   if (g_config->baobab_mode){
-    Sector::get().get_camera().shake(1f, 0, 200.f);
+    Sector::get().get_camera().shake(1.f, 0, 200.f);
   }else {
     Sector::get().get_camera().shake(.1f, 0, 20.f);
   }
