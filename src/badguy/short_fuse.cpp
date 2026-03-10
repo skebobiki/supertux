@@ -25,10 +25,18 @@
 #include "supertux/sector.hpp"
 #include "util/reader_mapping.hpp"
 
+#include "supertux/gameconfig.hpp"
+#include "supertux/globals.hpp" // for baobab mode
+#include <stdlib.h>
+
 ShortFuse::ShortFuse(const ReaderMapping& reader) :
   WalkingBadguy(reader, "images/creatures/short_fuse/short_fuse.sprite", "left", "right")
 {
-  walk_speed = 100;
+  if (g_config->baobab_mode){
+    walk_speed = ((rand()%10)+1) * 100;
+  }else{
+    walk_speed = 100;
+  }
   set_ledge_behavior(LedgeBehavior::SMART);
 
   SoundManager::current()->preload("sounds/firecracker.ogg");
@@ -44,8 +52,13 @@ ShortFuse::explode()
     BadGuy::kill_fall();
   else
   {
+    float power = EXPLOSION_STRENGTH_NEAR;
+    if (g_config->baobab_mode){
+        power *= 12 - (walk_speed / 100);
+        power *= 25;
+    }
     Sector::get().add<Explosion>(get_bbox().get_middle(),
-      EXPLOSION_STRENGTH_NEAR, 8, true);
+      power, 8, true);
 
     run_dead_script();
     remove_me();

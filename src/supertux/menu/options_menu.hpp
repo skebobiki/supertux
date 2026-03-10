@@ -91,6 +91,7 @@ private:
     MNID_PRECISE_SCROLLING,
     MNID_INVERT_WHEEL_X,
     MNID_INVERT_WHEEL_Y,
+    MNID_BAOBAB,
   };
 
 private:

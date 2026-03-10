@@ -34,6 +34,9 @@
 #include "util/reader_mapping.hpp"
 #include "video/surface.hpp"
 
+#include "supertux/gameconfig.hpp"
+#include "supertux/globals.hpp" // for baobab mode
+
 namespace
 {
 const float ANNOUNCE_INTERVAL = 0.1f;
@@ -566,7 +569,11 @@ Yeti::drop_stalactite()
   SoundManager::current()->play("sounds/thud.ogg", get_pos());
 
   // Make a stalactite fall down and shake the camera a bit.
-  Sector::get().get_camera().shake(.1f, 0, 20.f);
+  if (g_config->baobab_mode){
+    Sector::get().get_camera().shake(1f, 0, 200.f);
+  }else {
+    Sector::get().get_camera().shake(.1f, 0, 20.f);
+  }
 
   auto player = get_nearest_player();
   if (!player) return;

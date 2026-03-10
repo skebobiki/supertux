@@ -84,6 +84,8 @@ public:
   bool invert_wheel_y;
   bool max_viewport;
 
+  bool baobab_mode;
+
   /** Prefer the wayland session. Depending on the platform, this may not be used. */
   bool prefer_wayland;
 

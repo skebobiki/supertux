@@ -18,12 +18,19 @@
 
 #include "sprite/sprite.hpp"
 
+#include "supertux/gameconfig.hpp"
+#include "supertux/globals.hpp" // for baobab mode
+
 SmartBall::SmartBall(const ReaderMapping& reader)
   : WalkingBadguy(reader, "images/creatures/snowball/smart-snowball.sprite", "left", "right")
 {
   parse_type(reader);
-
-  walk_speed = 80;
+  if (g_config->baobab_mode){
+    walk_speed = 800;
+  }
+  else{
+    walk_speed = 80;
+  }
   set_ledge_behavior(LedgeBehavior::SMART);
 }
 
