@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [arm64-v8a, armeabi-v7a, x86, x86_64]
+        arch: [arm64-v8a, x86_64]
     runs-on: ubuntu-latest
     env:
       # SUPERTUX_VERSION is set later using git describe.
@@ -51,7 +51,7 @@ jobs:
 
       - name: Prepare SUPERTUX_VERSION
         run: |
-          tag=$(git describe --tags --abbrev=0)
+          tag=dont_care_latest
           echo "SUPERTUX_VERSION=$tag" >> $GITHUB_ENV
           echo "SUPERTUX_VERSION: $tag"
 
@@ -67,10 +67,8 @@ jobs:
         run: |
           case "${{ matrix.arch }}" in
             arm64-v8a) export VCPKG_TRIPLET=arm64-android ;;
-            armeabi-v7a) export VCPKG_TRIPLET=arm-neon-android ;;
-            x86) export VCPKG_TRIPLET=x86-android ;;
             x86_64) export VCPKG_TRIPLET=x64-android ;;
-            *) exit 67 ;;
+            *) exit 42 ;;
           esac
           echo "VCPKG_TRIPLET=$VCPKG_TRIPLET" >> $GITHUB_ENV
           echo "VCPKG_ROOT=$VCPKG_ROOT" >> $GITHUB_ENV
