@@ -18,18 +18,30 @@
 
 #include "sprite/sprite.hpp"
 
+
+#include "supertux/gameconfig.hpp"
+#include "supertux/globals.hpp" // for baobab mode
+
+float WALK_SPEED(){
+    const float WALK_SPEED_BASE = 80.f;
+    if (g_config->baobab_mode){
+        return WALK_SPEED_BASE*3;
+    }
+    return WALK_SPEED_BASE;
+}
+
 SnowBall::SnowBall(const ReaderMapping& reader)
   : WalkingBadguy(reader, "images/creatures/snowball/snowball.sprite", "left", "right")
 {
   parse_type(reader);
 
-  walk_speed = 80;
+  walk_speed = WALK_SPEED();
 }
 
 SnowBall::SnowBall(const Vector& pos, Direction d, const std::string& script)
   : WalkingBadguy(pos, d, "images/creatures/snowball/snowball.sprite", "left", "right")
 {
-  walk_speed = 80;
+  walk_speed = WALK_SPEED();
   m_dead_script = script;
 }
 

@@ -184,7 +184,7 @@ jobs:
             $ANDROID_SDK_ROOT/build-tools/${B_T_VERSION}/apksigner sign \
               --ks supertux.keystore \
               --ks-key-alias supertux \
-              --ks-pass pass:"${{ secrets.ANDROID_SIGNING_PW }}" \
+              --ks-pass "${{ secrets.ANDROID_SIGNING_PW }}" \
               ./SuperTux-${SUPERTUX_VERSION}-${{ matrix.arch }}.apk
           else
             # More fallback logic; our key should exist

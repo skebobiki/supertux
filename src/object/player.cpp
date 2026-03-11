@@ -50,6 +50,9 @@
 #include "trigger/trigger_base.hpp"
 #include "video/surface.hpp"
 
+#include "supertux/gameconfig.hpp"
+#include "supertux/globals.hpp" // for baobab mode
+
 #define SWIMMING
 
 const float TUX_INVINCIBLE_TIME_WARNING = 2.0f;
@@ -134,10 +137,41 @@ const float BIG_TUX_HEIGHT = 62.8f;
 const float DUCKED_TUX_HEIGHT = 31.8f;
 
 /* Stone Tux variables */
-const float MAX_STONE_SPEED = 500.f;
-const float STONE_KEY_ACCELERATION = 200.f;
-const float STONE_DOWN_ACCELERATION = 300.f;
-const float STONE_UP_ACCELERATION = 400.f;
+float MAX_STONE_SPEED(){
+    const float MAX_STONE_SPEED_BASE = 500.f;
+    if (g_config->baobab_mode){
+        return MAX_STONE_SPEED_BASE*25;
+    }
+    return MAX_STONE_SPEED_BASE;
+}
+float STONE_KEY_ACCELERATION(){
+    const float STONE_KEY_ACCELERATION_BASE = 200.f;
+    if (g_config->baobab_mode){
+        return STONE_KEY_ACCELERATION_BASE*3;
+    }
+    return STONE_KEY_ACCELERATION_BASE;
+}
+float STONE_DOWN_ACCELERATION(){
+    const float STONE_DOWN_ACCELERATION_BASE = 300.f;
+    if (g_config->baobab_mode){
+        return STONE_DOWN_ACCELERATION_BASE*3;
+    }
+    return STONE_DOWN_ACCELERATION_BASE;
+}
+float STONE_UP_ACCELERATION(){
+    const float STONE_UP_ACCELERATION_BASE = 400.f;
+    if (g_config->baobab_mode){
+        return STONE_UP_ACCELERATION_BASE*3;
+    }
+    return STONE_UP_ACCELERATION_BASE;
+}
+float STONE_JUMP_FORCE(){
+    const float STONE_JUMP_FORCE_BASE = -450.f;
+    if (g_config->baobab_mode){
+        return STONE_JUMP_FORCE_BASE*3;
+    }
+    return STONE_JUMP_FORCE_BASE;
+}
 
 /* Swim variables */
 const float SWIM_SPEED = 300.f;
@@ -2430,7 +2464,7 @@ Player::handle_collision_logic(const CollisionHit& hit)
   {
     m_physic.set_acceleration_x(0);
     m_physic.set_velocity_x(0);
-    stop_rolling();
+    if (!g_config->baobab_mode) stop_rolling();
   }
 
   if ((hit.left || hit.right) && hit.slope_normal.x == 0) {
@@ -2872,7 +2906,7 @@ Player::handle_input_rolling()
   if (m_controller->hold(Control::JUMP) && m_jump_button_timer.started() && (m_can_jump || m_coyote_timer.started()))
   {
     m_jump_button_timer.stop();
-    do_jump(-450.f);
+    do_jump(STONE_JUMP_FORCE());
     m_coyote_timer.stop();
   }
 
@@ -2890,7 +2924,7 @@ Player::handle_input_rolling()
 
   // handle x-movement
 
-  if (std::abs(m_physic.get_velocity_x()) > MAX_STONE_SPEED) {
+  if (std::abs(m_physic.get_velocity_x()) > MAX_STONE_SPEED()) {
     m_physic.set_acceleration_x(-m_physic.get_velocity_x());
   }
   else
@@ -2903,10 +2937,10 @@ Player::handle_input_rolling()
     if (m_floor_normal.y != 0)
     {
       if (m_floor_normal.x > 0.f) {
-        sx = ((m_dir == Direction::LEFT ? STONE_UP_ACCELERATION : STONE_DOWN_ACCELERATION)*std::abs(m_floor_normal.x));
+        sx = ((m_dir == Direction::LEFT ? STONE_UP_ACCELERATION() : STONE_DOWN_ACCELERATION())*std::abs(m_floor_normal.x));
       }
       if (m_floor_normal.x < 0.f) {
-        sx = ((m_dir == Direction::RIGHT ? -STONE_UP_ACCELERATION : -STONE_DOWN_ACCELERATION)*std::abs(m_floor_normal.x));
+        sx = ((m_dir == Direction::RIGHT ? -STONE_UP_ACCELERATION() : -STONE_DOWN_ACCELERATION())*std::abs(m_floor_normal.x));
       }
     }
     else
@@ -2917,12 +2951,12 @@ Player::handle_input_rolling()
     // key velocity
     if (m_controller->hold(Control::LEFT) && !m_controller->hold(Control::RIGHT))
     {
-      ax = -STONE_KEY_ACCELERATION;
+      ax = -STONE_KEY_ACCELERATION();
       m_dir = Direction::LEFT;
     }
     else if (m_controller->hold(Control::RIGHT) && !m_controller->hold(Control::LEFT))
     {
-      ax = STONE_KEY_ACCELERATION;
+      ax = STONE_KEY_ACCELERATION();
       m_dir = Direction::RIGHT;
     }
     else {
