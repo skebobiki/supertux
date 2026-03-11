@@ -16,6 +16,9 @@
 
 #include "badguy/walkingleaf.hpp"
 
+#include "supertux/gameconfig.hpp"
+#include "supertux/globals.hpp" // for baobab mode
+
 WalkingLeaf::WalkingLeaf(const ReaderMapping& reader) :
   ViciousIvy(reader, "images/creatures/walkingleaf/walkingleaf.sprite")
 {
@@ -44,12 +47,12 @@ WalkingLeaf::on_type_change(int old_type)
   switch (m_type)
   {
     case NORMAL:
-      walk_speed = 60.f;
-      m_fall_speed = 35.f;
+      walk_speed = 60.f*g_config->speed_mul();
+      m_fall_speed = 35.f*g_config->speed_mul();
       break;
     case CORRUPTED:
-      walk_speed = 55.f;
-      m_fall_speed = 80.f;
+      walk_speed = 55.f*g_config->speed_mul();
+      m_fall_speed = 80.f*g_config->speed_mul();
       break;
     default:
       break;

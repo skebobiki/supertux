@@ -33,6 +33,10 @@ static const float VICIOUSIVY_WIDTH = 32;
 static const float VICIOUSIVY_HEIGHT = 32;
 static const float VICIOUSIVY_Y_OFFSET = 24;
 
+#include "supertux/gameconfig.hpp"
+#include "supertux/globals.hpp" // for baobab mode
+
+
 MrTree::MrTree(const ReaderMapping& reader) :
   WalkingBadguy(reader, "images/creatures/mr_tree/mr_tree.sprite","left","right", LAYER_OBJECTS,
                 "images/objects/lightmap_light/lightmap_light-large.sprite")
@@ -72,10 +76,10 @@ MrTree::on_type_change(int old_type)
   switch (m_type)
   {
     case NORMAL:
-      walk_speed = 80.f;
+      walk_speed = 80.f*g_config->speed_mul();
       break;
     case CORRUPTED:
-      walk_speed = 70.f;
+      walk_speed = 70.f*g_config->speed_mul();
       break;
     default:
       break;

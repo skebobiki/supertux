@@ -40,6 +40,10 @@ static const float SAFE_DIST = 32.f * 10.f;
 static const float NORMAL_WALK_SPEED = 80.0f;
 static const float FLEEING_WALK_SPEED = 180.0f;
 
+
+#include "supertux/gameconfig.hpp"
+#include "supertux/globals.hpp" // for baobab mode
+
 GoldBomb::GoldBomb(const ReaderMapping& reader) :
   MrBomb(reader, "images/creatures/gold_bomb/gold_bomb.sprite"),
   m_realize_timer()
@@ -216,11 +220,11 @@ GoldBomb::get_coins_worth() const
 void
 GoldBomb::flee(Direction dir)
 {
-  set_walk_speed(FLEEING_WALK_SPEED);
+  set_walk_speed(FLEEING_WALK_SPEED * g_config->speed_mul());
   set_ledge_behavior(LedgeBehavior::NORMAL);
   m_dir = dir;
 
-  const float speed = FLEEING_WALK_SPEED * (m_dir == Direction::LEFT ? -1 : 1);
+  const float speed = FLEEING_WALK_SPEED * g_config->speed_mul() * (m_dir == Direction::LEFT ? -1 : 1);
   m_physic.set_acceleration_x(speed);
   m_physic.set_velocity_x(speed);
 

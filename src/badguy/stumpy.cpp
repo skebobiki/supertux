@@ -26,6 +26,10 @@
 #include "sprite/sprite.hpp"
 #include "supertux/sector.hpp"
 
+#include "supertux/gameconfig.hpp"
+#include "supertux/globals.hpp" // for baobab mode
+
+
 static const float STUMPY_SPEED = 120;
 static const float INVINCIBLE_TIME = 1;
 
@@ -35,7 +39,7 @@ Stumpy::Stumpy(const ReaderMapping& reader) :
   mystate(STATE_NORMAL),
   invincible_timer()
 {
-  walk_speed = STUMPY_SPEED;
+  walk_speed = STUMPY_SPEED*g_config->speed_mul();
   set_ledge_behavior(LedgeBehavior::SMART);
   SoundManager::current()->preload("sounds/mr_treehit.ogg");
 }
@@ -45,10 +49,10 @@ Stumpy::Stumpy(const Vector& pos, Direction d) :
   mystate(STATE_INVINCIBLE),
   invincible_timer()
 {
-  walk_speed = STUMPY_SPEED;
+  walk_speed = STUMPY_SPEED*g_config->speed_mul();
   set_ledge_behavior(LedgeBehavior::SMART);
   SoundManager::current()->preload("sounds/mr_treehit.ogg");
-  invincible_timer.start(INVINCIBLE_TIME);
+  invincible_timer.start(INVINCIBLE_TIME*g_config->speed_mul());
 }
 
 void

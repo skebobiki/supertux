@@ -187,4 +187,11 @@ public:
   std::string repository_url;
 
   bool is_christmas() const;
+
+  float speed_mul(){
+    if (baobab_mode){
+      return 3.f;
+    }
+    return 1.f;
+  }
 };
