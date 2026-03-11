@@ -31,15 +31,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [x64, x86]
-        build_type: [Debug, RelWithDebInfo]
+        arch: [x64]
+        build_type: [Debug, RelWithDebInfo, Release]
         include:
           - build_type: RelWithDebInfo
             arch: x64
             release: ON
-          - build_type: RelWithDebInfo
-            arch: x86
+          - build_type: Release
+            arch: x64
             release: ON
+          # - build_type: RelWithDebInfo
+            # arch: x86
+            # release: ON
 
     runs-on: windows-latest
     steps:
