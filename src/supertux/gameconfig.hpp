@@ -187,7 +187,13 @@ public:
   std::string repository_url;
 
   bool is_christmas() const;
-
+  
+  template <typename T> T baobab_case(T normal, T baobab){
+    if (baobab_mode){
+      return baobab;
+    }
+    return normal;
+  }
   float speed_mul(){
     if (baobab_mode){
       return 3.f;

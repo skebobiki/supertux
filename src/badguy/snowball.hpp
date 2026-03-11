@@ -36,7 +36,7 @@ public:
 
   GameObjectTypes get_types() const override;
   std::string get_default_sprite_name() const override;
-
+  
 protected:
   virtual bool collision_squished(MovingObject& object) override;
 

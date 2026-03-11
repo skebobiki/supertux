@@ -21,6 +21,7 @@
 #include "audio/sound_manager.hpp"
 #include "audio/sound_source.hpp"
 #include "badguy/owl.hpp"
+#include "badguy/snowball.hpp"
 #include "object/explosion.hpp"
 #include "object/player.hpp"
 #include "object/portable.hpp"
@@ -30,6 +31,9 @@
 #include "supertux/sector.hpp"
 #include "util/reader_mapping.hpp"
 
+#include "supertux/gameconfig.hpp"
+#include "supertux/globals.hpp" // for baobab mode
+
 MrBomb::MrBomb(const ReaderMapping& reader) :
   WalkingBadguy(reader, "images/creatures/mr_bomb/mr_bomb.sprite", "left", "right"),
   m_state(MB_STATE_NORMAL),
@@ -38,7 +42,7 @@ MrBomb::MrBomb(const ReaderMapping& reader) :
 {
   parse_type(reader);
 
-  walk_speed = 80;
+  walk_speed = 80.f * g_config->baobab_case(1,2);
   set_ledge_behavior(LedgeBehavior::SMART);
 
   SoundManager::current()->preload("sounds/explosion.wav");
@@ -52,7 +56,7 @@ MrBomb::MrBomb(const ReaderMapping& reader, const std::string& sprite, const std
   m_ticking_sound(),
   m_exploding_sprite(SpriteManager::current()->create(glow_sprite))
 {
-  walk_speed = 80;
+  walk_speed = 80.f / g_config->speed_mul();
   set_ledge_behavior(LedgeBehavior::SMART);
 
   SoundManager::current()->preload("sounds/explosion.wav");
@@ -144,6 +148,25 @@ MrBomb::collision_badguy(BadGuy& badguy, const CollisionHit& hit)
 bool
 MrBomb::collision_squished(MovingObject& object)
 {
+  if (g_config->baobab_mode){
+    Vector my_pos = get_pos();
+    // right side
+    {
+      Vector sb_pos(my_pos.x + m_sprite->get_current_hitbox_width() + 1  + 32, my_pos.y);
+      Rectf sb_bbox(sb_pos.x, sb_pos.y, sb_pos.x + 32, sb_pos.y + 32);
+      if (Sector::get().is_free_of_movingstatics(sb_bbox, this)) {
+        Sector::get().add<SnowBall>(sb_bbox.p1(), Direction::RIGHT,"").walk_speed *= 3.f;
+      }
+    }
+    // left side
+    {
+      Vector sb_pos(my_pos.x - 1  - 32, my_pos.y);
+      Rectf sb_bbox(sb_pos.x, sb_pos.y, sb_pos.x + 32, sb_pos.y + 32);
+      if (Sector::get().is_free_of_movingstatics(sb_bbox, this)) {
+        Sector::get().add<SnowBall>(sb_bbox.p1(), Direction::LEFT,"").walk_speed *= 3.f;
+      }
+    }
+  }
   if (m_frozen)
     return WalkingBadguy::collision_squished(object);
 
