@@ -396,7 +396,7 @@ if (FileSystem::is_directory(olduserdir)) {
   {
     log_warning << "Couldn't add user directory '" << m_userdir << "' to PhysFS searchpath: " << physfsutil::get_last_error() << std::endl;
   }
-  log_info << "User directory: '" << m_userdir << "'" << std::endl;
+  log_debug_f(__FILE__, __LINE__, true) << "User directory: '" << m_userdir << "'" << std::endl;
 }
 
 void PhysfsSubsystem::print_search_path()
